@@ -1,5 +1,3 @@
----@diagnostic disable: undefined-global, lowercase-global, unused-function, unused-local, empty-block, unbalanced-assignments, deprecated, undefined-field, redundant-parameter, redundant-parameter
-
 local VERSION = "1.2"
 
 -- LURAPH (if i left it enabled)
@@ -300,7 +298,7 @@ do
             _dragging_offset = Vector2.new(mouse.X,mouse.Y)-frame.AbsolutePosition
         end)
 
-        local inputEnded = UIS.InputEnded:Connect(function(input)
+        local inputEnded = mouse.Button1Up:Connect(function()
             _dragging = false
             _dragging_offset = nil
         end)
@@ -485,7 +483,7 @@ do
             Converted["_Main"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Converted["_Main"].BackgroundTransparency = 1
             Converted["_Main"].ClipsDescendants = true
-            Converted["_Main"].Size = Enum.AutomaticSize.XY
+            Converted["_Main"].Size = UDim2.new(1, 0, 1, 0)
             Converted["_Main"].Name = "Main"
             Converted["_Main"].Parent = Converted["_Loader"]
 
@@ -2417,13 +2415,10 @@ do
                 end
             end)
 
-            button.InputBegan:Connect(function()
-                if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
-                    isResizing = true
-                    offset = Vector2.new(mouse.X-(main.AbsolutePosition.X+main.AbsoluteSize.X),mouse.Y-(main.AbsolutePosition.Y+main.AbsoluteSize.Y))
-                end
+            button.MouseButton1Down:Connect(function()
+                isResizing = true
+                offset = Vector2.new(mouse.X-(main.AbsolutePosition.X+main.AbsoluteSize.X),mouse.Y-(main.AbsolutePosition.Y+main.AbsoluteSize.Y))
             end)
-            
 
             LPH_JIT_MAX(function()
                 table.insert(_connections,Run.RenderStepped:Connect(function()
