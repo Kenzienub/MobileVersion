@@ -1,3 +1,5 @@
+---@diagnostic disable: undefined-global, lowercase-global, unused-function, unused-local, empty-block, unbalanced-assignments, deprecated, undefined-field, redundant-parameter, redundant-parameter
+
 local VERSION = "1.2"
 
 -- LURAPH (if i left it enabled)
@@ -293,14 +295,18 @@ do
         local _dragging = false
         local _dragging_offset
 
-        local inputBegan = button.MouseButton1Down:Connect(function()
-            _dragging = true
-            _dragging_offset = Vector2.new(mouse.X,mouse.Y)-frame.AbsolutePosition
+        local inputBegan = button.InputBegan:Connect(function()
+            if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+                _dragging = true
+                _dragging_offset = Vector2.new(mouse.X,mouse.Y)-frame.AbsolutePosition
+            end
         end)
 
-        local inputEnded = mouse.Button1Up:Connect(function()
-            _dragging = false
-            _dragging_offset = nil
+        local inputEnded = UIS.InputEnded:Connect(function()
+            if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+                _dragging = false
+                _dragging_offset = nil
+            end
         end)
 
         local updateEvent
@@ -2415,9 +2421,11 @@ do
                 end
             end)
 
-            button.MouseButton1Down:Connect(function()
-                isResizing = true
-                offset = Vector2.new(mouse.X-(main.AbsolutePosition.X+main.AbsoluteSize.X),mouse.Y-(main.AbsolutePosition.Y+main.AbsoluteSize.Y))
+            button.InputBegan:Connect(function()
+                if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    isResizing = true
+                    offset = Vector2.new(mouse.X-(main.AbsolutePosition.X+main.AbsoluteSize.X),mouse.Y-(main.AbsolutePosition.Y+main.AbsoluteSize.Y))
+                end
             end)
 
             LPH_JIT_MAX(function()
@@ -3762,8 +3770,10 @@ do
             local con
             local lastMouseX = mouse.X
 
-            sliderButton.MouseButton1Down:Connect(function()
-                dragging = true
+            sliderButton.InputBegan:Connect(function()
+                if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    dragging = true
+                end
             end)
 
             local lerp = 0.45
@@ -4174,8 +4184,10 @@ do
             local con
             local lastMouseX = mouse.X
 
-            sliderButton.MouseButton1Down:Connect(function()
-                dragging = true
+            sliderButton.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    dragging = true
+                end
             end)
 
             local lerp = 0.45
@@ -6015,14 +6027,16 @@ do
                         optionButton.BackgroundTransparency = 1
                         optionButton.TextColor3 = Color3.fromRGB(255, 255, 255)
                         optionButton.Parent = element.Secondary
-            
-                        optionButton.MouseButton1Click:Connect(function()
-                            handleOptionSelection(option)
+
+                        optionButton.InputBegan:Connect(function(input)
+                            if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+                                handleOptionSelection(option)
                             
-                            if selectedItems[option] then
-                                optionButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)  
-                            else
-                                optionButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  
+                                if selectedItems[option] then
+                                    optionButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)  
+                                else
+                                    optionButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  
+                                end
                             end
                         end)
                     end
@@ -6774,14 +6788,18 @@ do
             local d1 = false
             local d2 = false
 
-            rainbowBtn.MouseButton1Down:Connect(function()
-                d1 = true
-                d2 = false
+            rainbowBtn.InputBegan:Connect(function()
+                if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    d1 = true
+                    d2 = false
+                end
             end)
 
-            secondBtn.MouseButton1Down:Connect(function()
-                d2 = true
-                d1 = false
+            secondBtnInputBegan:Connect(function()
+                if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    d2 = true
+                    d1 = false
+                end
             end)
 
             table.insert(_self._connections,UIS.InputEnded:Connect(function(inp)
